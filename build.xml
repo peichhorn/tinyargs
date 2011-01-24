@@ -88,7 +88,7 @@ the common tasks and can be called on to run the main aspects of all the sub-scr
   
   <target name="compile" depends="ensureBuildDeps" description="Compiles the code.">
     <ivy:compile destdir="build/tinyargs" source="1.6" target="1.6" includeantruntime="false">
-      <src path="src/core" />>
+      <src path="src/core" />
       <classpath location="build/tinyargs" />
       <classpath refid="build.path" />
     </ivy:compile>
