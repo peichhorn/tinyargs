@@ -1,0 +1,42 @@
+Annotation-based command line interpreter based on the JArgs Project (http://jargs.sourceforge.net)
+
+Example:
+
+@CommandLineApplication(appNameFromJar = true, enableHelp = true, showUsageOnExeption = true)
+public class ImageConverter{
+  @CommandLineOption(shortForm = "i", longForm = "input", description = "inputfile")
+  private String inputFile = "";
+  @CommandLineOption(shortForm = "o", longForm = "output", description = "outputfile")
+  private String outputFile = "";
+  @CommandLineOption(shortForm = "s", longForm = "s", description = "(optional) image height")
+  @CommandLineValidator(min = "0")
+  private Integer s;
+  @CommandLineOption(shortForm = "t", longForm = "t", description = "(optional) image width")
+  @CommandLineValidator(min = "0")
+  private Integer t;
+
+  public void convert() {
+    convertImpl(inputFile, outputFile, s, t);
+  }
+
+  private void convertImpl(String inputFile, String outputFile, Integer s, Integer t) {
+    // ...
+  }
+}
+
+public class Main {
+  public static void main(String[] args) {
+    CommandLineApplicationParser<ImageConverter> parser = CommandLineApplicationParser.of(ImageConverter.class);
+      ImageConverter app = parser.parse(args);
+      if (!parser.helpRequested()) {
+        app.convert();
+      }
+    }
+  }
+}
+
+TODO:
+
+- simplify API: extract @..Help annotation from @CommandLineApplication
+- mandatory values
+ 

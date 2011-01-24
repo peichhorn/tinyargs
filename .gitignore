@@ -1,0 +1,9 @@
+/lib
+/bin
+/.classpath
+/.project
+/ivyCache
+/.settings
+/.factorypath
+/dist
+*.launch
