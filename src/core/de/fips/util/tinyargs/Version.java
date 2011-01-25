@@ -27,7 +27,7 @@ package de.fips.util.tinyargs;
  * @author Philipp Eichhorn
  */
 public final class Version {
-	private static final String VERSION = "1.13-HEAD";
+	private static final String VERSION = "1.1.4-HEAD";
 	
 	private Version() {
 	}
