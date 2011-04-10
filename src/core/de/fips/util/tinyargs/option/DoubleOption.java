@@ -35,16 +35,16 @@ import de.fips.util.tinyargs.exception.IllegalOptionValueException;
  */
 public class DoubleOption extends AbstractOption<Double> {
 
-	public DoubleOption(String longForm, String description) {
+	public DoubleOption(final String longForm, final String description) {
 		super(longForm, description, true);
 	}
 
-	public DoubleOption(char shortForm, String longForm, String description) {
+	public DoubleOption(final char shortForm, final String longForm, final String description) {
 		super(shortForm, longForm, description, true);
 	}
 
 	@Override
-	public Double parseValue(String arg, Locale locale) throws IllegalOptionValueException {
+	public Double parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
 		try {
 			final NumberFormat format = NumberFormat.getNumberInstance(locale);
 			final Number num = format.parse(arg);

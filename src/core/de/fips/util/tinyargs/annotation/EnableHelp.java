@@ -27,16 +27,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @see de.fips.util.tinyargs.CommandLineApplicationParser CommandLineApplicationParser
+ * @see de.fips.util.tinyargs.CommandLineReader CommandLineReader
  * 
  * @author Philipp Eichhorn
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface CommandLineOption {
-	String longForm() default "";
-
-	String shortForm() default "";
-
-	String description() default "";
+@Target(ElementType.TYPE)
+public @interface EnableHelp {
+	boolean showOnExeption() default false;
 }

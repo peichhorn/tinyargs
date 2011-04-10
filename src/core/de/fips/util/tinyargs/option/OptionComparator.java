@@ -32,7 +32,7 @@ import java.util.Comparator;
 public class OptionComparator implements Comparator<AbstractOption<?>> {
 
 	@Override
-	public int compare(AbstractOption<?> o1, AbstractOption<?> o2) {
+	public int compare(final AbstractOption<?> o1, final AbstractOption<?> o2) {
 		return o1.getLongForm().compareToIgnoreCase(o2.getLongForm());
 	}
 }

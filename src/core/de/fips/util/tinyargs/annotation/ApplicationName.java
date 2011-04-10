@@ -27,19 +27,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @see de.fips.util.tinyargs.CommandLineApplicationParser CommandLineApplicationParser
+ * @see de.fips.util.tinyargs.CommandLineReader CommandLineReader
  * 
  * @author Philipp Eichhorn
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CommandLineApplication {
-
-	String appName() default "";
-
-	boolean appNameFromJar() default false;
-
-	boolean enableHelp() default false;
-
-	boolean showUsageOnExeption() default false;
+public @interface ApplicationName {
+	boolean fromJar() default false;
+	String value() default "";
 }

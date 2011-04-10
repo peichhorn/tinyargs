@@ -33,16 +33,16 @@ import de.fips.util.tinyargs.exception.IllegalOptionValueException;
  */
 public class StringOption extends AbstractOption<String> {
 
-	public StringOption(String longForm, String description) {
+	public StringOption(final String longForm, final String description) {
 		super(longForm, description, true);
 	}
 
-	public StringOption(char shortForm, String longForm, String description) {
+	public StringOption(final char shortForm, final String longForm, final String description) {
 		super(shortForm, longForm, description, true);
 	}
 
 	@Override
-	public String parseValue(String arg, Locale locale) throws IllegalOptionValueException {
+	public String parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
 		return arg;
 	}
 }

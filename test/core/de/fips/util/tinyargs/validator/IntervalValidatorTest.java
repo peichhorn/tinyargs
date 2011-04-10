@@ -2,18 +2,29 @@ package de.fips.util.tinyargs.validator;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import de.fips.util.tinyargs.validator.IntervalValidator;
 
 public class IntervalValidatorTest {
 
-	private IntervalValidator<Integer> validator;
-	private IntervalValidator<String> validator2;
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+	
+	@Test
+	public void whenMinIsLargerThanMax_construcor_shouldThrowException() throws Exception {
+		// setup
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("'min' is supposed to be smaller than 'max'");
+		// run + assert
+		new IntervalValidator<Integer>(100, 0);
+	}
 
 	@Test
 	public void testValidate() throws Exception {
-		validator = new IntervalValidator<Integer>(0, 100);
+		IntervalValidator<Integer> validator = new IntervalValidator<Integer>(0, 100);
 		assertThat(validator.validate(-1)).isFalse();
 		assertThat(validator.validate(0)).isTrue();
 		assertThat(validator.validate(50)).isTrue();
@@ -35,7 +46,7 @@ public class IntervalValidatorTest {
 		assertThat(validator.validate(100)).isTrue();
 		assertThat(validator.validate(1000)).isTrue();
 
-		validator2 = new IntervalValidator<String>("bbbbb", "ggggg");
+		IntervalValidator<String> validator2 = new IntervalValidator<String>("bbbbb", "ggggg");
 		assertThat(validator2.validate("aaaaa")).isFalse();
 		assertThat(validator2.validate("bbbbb")).isTrue();
 		assertThat(validator2.validate("easda")).isTrue();
@@ -45,13 +56,13 @@ public class IntervalValidatorTest {
 
 	@Test
 	public void testValidateIsNullSafe() throws Exception {
-		validator = new IntervalValidator<Integer>(0, 100);
+		IntervalValidator<Integer> validator = new IntervalValidator<Integer>(0, 100);
 		assertThat(validator.validate(null)).isFalse();
 	}
 
 	@Test
 	public void testToString() throws Exception {
-		validator = new IntervalValidator<Integer>(0, 100);
+		IntervalValidator<Integer> validator = new IntervalValidator<Integer>(0, 100);
 		assertThat(validator.toString()).isEqualTo("interval [0, 100]");
 		validator = new IntervalValidator<Integer>(null, 100);
 		assertThat(validator.toString()).isEqualTo("interval ]..., 100]");

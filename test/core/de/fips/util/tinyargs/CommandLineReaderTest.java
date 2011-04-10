@@ -6,24 +6,24 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.fips.util.tinyargs.CommandLineApplicationParser;
+import de.fips.util.tinyargs.CommandLineReader;
 import de.fips.util.tinyargs.exception.IllegalOptionValueException;
 import de.fips.util.tinyargs.exception.UnknownOptionException;
 
-public class CommandLineApplicationParserTest {
-	CommandLineApplicationParser<TestApp> app;
+public class CommandLineReaderTest {
+	CommandLineReader<TestApp> reader;
 	private TestPrintStream console;
 
 	@Before
 	public void setUp() {
 		console = new TestPrintStream();
-		app = CommandLineApplicationParser.of(TestApp.class);
-		app.setPrintStream(console);
+		reader = CommandLineReader.of(TestApp.class);
+		reader.setPrintStream(console);
 	}
 
 	@Test
 	public void testParseFillsObject() throws Exception {
-		final TestApp object = app.parse(new String[] { "-s", "100", "--text", "Hello World" });
+		final TestApp object = reader.read(new String[] { "-s", "100", "--text", "Hello World" });
 		assertThat(object.getSize()).isEqualTo(100);
 		assertThat(object.text).isEqualTo("Hello World");
 		assertThat(object.f).isEqualTo(1.13f);
@@ -31,8 +31,8 @@ public class CommandLineApplicationParserTest {
 
 	@Test
 	public void testHelpString() throws Exception {
-		app.parse(new String[] { "-h" });
-		assertThat(app.helpRequested()).isTrue();
+		reader.read(new String[] { "-h" });
+		assertThat(reader.helpRequested()).isTrue();
 
 		final String ls = System.getProperty("line.separator");
 		String expected = //
@@ -49,16 +49,16 @@ public class CommandLineApplicationParserTest {
 	public void testHelpStringOnException() throws Exception {
 		final String invalidOption = "-invalidOption";
 		try {
-			app.parse(new String[] { invalidOption });
+			reader.read(new String[] { invalidOption });
 			fail();
 		} catch (final UnknownOptionException e) {
 			assertThat(e.getOptionName()).isEqualTo(invalidOption);
 		}
-		assertThat(app.helpRequested()).isFalse();
+		assertThat(reader.helpRequested()).isFalse();
 
 		final String ls = System.getProperty("line.separator");
 		String expected = //
-			"Illegal option: 'i' in '-invalidOption'" + ls + ls + //
+			"Illegal option 'i' in '-invalidOption'" + ls + ls + //
 			"usage: TestApp [options]" + ls + //
 			"options:" + ls + //
 			"\t--d" + ls + //
@@ -70,16 +70,16 @@ public class CommandLineApplicationParserTest {
 
 	@Test(expected = IllegalOptionValueException.class)
 	public void testParseValidatorWrongType() throws Exception {
-		app.parse(new String[] { "--size", "string" });
+		reader.read(new String[] { "--size", "string" });
 	}
 
 	@Test(expected = IllegalOptionValueException.class)
 	public void testParseValidatorInterval() throws Exception {
-		app.parse(new String[] { "-s", "1000" });
+		reader.read(new String[] { "-s", "1000" });
 	}
 
 	@Test(expected = IllegalOptionValueException.class)
 	public void testParseValidatorValueSet() throws Exception {
-		app.parse(new String[] { "--text", "invalidValue" });
+		reader.read(new String[] { "--text", "invalidValue" });
 	}
 }

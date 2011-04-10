@@ -27,16 +27,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @see de.fips.util.tinyargs.CommandLineApplicationParser CommandLineApplicationParser
+ * @see de.fips.util.tinyargs.CommandLineReader CommandLineReader
  * 
  * @author Philipp Eichhorn
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CommandLineValidator {
-	String min() default "";
+public @interface Option {
+	String longForm() default "";
 
-	String max() default "";
+	String shortForm() default "";
 
-	String[] value() default {};
+	String description() default "";
+
+	boolean mandatory() default true;
 }

@@ -36,8 +36,8 @@ public class UnknownSuboptionException extends UnknownOptionException {
 
 	private final char suboption;
 
-	public UnknownSuboptionException(String option, char suboption) {
-		super(option, "Illegal option: '" + suboption + "' in '" + option + "'");
+	public UnknownSuboptionException(final String option, final char suboption) {
+		super(option, String.format("Illegal option '%s' in '%s'", suboption, option));
 		this.suboption = suboption;
 	}
 }

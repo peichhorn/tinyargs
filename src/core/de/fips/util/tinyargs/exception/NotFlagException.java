@@ -44,8 +44,8 @@ public class NotFlagException extends UnknownOptionException {
 	 * @param notFlag
 	 *            The first character which wasn't a boolean
 	 */
-	public NotFlagException(String option, char optionChar) {
-		super(option, "Illegal option: '" + option + "', '" + optionChar + "' requires a value");
+	public NotFlagException(final String option, final char optionChar) {
+		super(option, String.format("Illegal option: '%s', '%s' requires a value", option, optionChar));
 		this.optionChar = optionChar;
 	}
 }

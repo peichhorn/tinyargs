@@ -34,16 +34,16 @@ import de.fips.util.tinyargs.exception.IllegalOptionValueException;
  */
 public class FloatOption extends AbstractOption<Float> {
 
-	public FloatOption(String longForm, String description) {
+	public FloatOption(final String longForm, final String description) {
 		super(longForm, description, true);
 	}
 
-	public FloatOption(char shortForm, String longForm, String description) {
+	public FloatOption(final char shortForm, final String longForm, final String description) {
 		super(shortForm, longForm, description, true);
 	}
 
 	@Override
-	public Float parseValue(String arg, Locale locale) throws IllegalOptionValueException {
+	public Float parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
 		try {
 			final NumberFormat format = NumberFormat.getNumberInstance(locale);
 			final Number num = format.parse(arg);

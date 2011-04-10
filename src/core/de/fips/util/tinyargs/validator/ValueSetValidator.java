@@ -38,7 +38,7 @@ public class ValueSetValidator<E> implements IValidator<E> {
 	private final Set<E> validValues;
 
 	@Override
-	public boolean validate(E value) {
+	public boolean validate(final E value) {
 		if (value == null) {
 			return false;
 		}

@@ -47,15 +47,15 @@ public abstract class AbstractOption<E> {
 	private final boolean isValueNeeded;
 	private final List<IValidator<E>> validators;
 
-	public AbstractOption(String longForm, String description, boolean wantsValue) {
+	public AbstractOption(final String longForm, final String description, final boolean wantsValue) {
 		this(null, longForm, description, wantsValue);
 	}
 
-	public AbstractOption(char shortForm, String longForm, String description, boolean wantsValue) {
+	public AbstractOption(final char shortForm, final String longForm, final String description, final boolean wantsValue) {
 		this(String.valueOf(shortForm), longForm, description, wantsValue);
 	}
 
-	private AbstractOption(String shortForm, String longForm, String description, boolean wantsValue) {
+	private AbstractOption(final String shortForm, final String longForm, final String description, final boolean wantsValue) {
 		if (longForm == null) {
 			throw new IllegalArgumentException("longForm may not be null");
 		}
@@ -69,7 +69,7 @@ public abstract class AbstractOption<E> {
 	/**
 	 * Adds a validator to this option.
 	 */
-	public AbstractOption<E> addValidator(IValidator<E> validator) {
+	public AbstractOption<E> addValidator(final IValidator<E> validator) {
 		validators.add(validator);
 		return this;
 	}
@@ -77,7 +77,7 @@ public abstract class AbstractOption<E> {
 	/**
 	 * @throws IllegalOptionValueException
 	 */
-	public final E getValue(String arg, Locale locale) throws IllegalOptionValueException {
+	public final E getValue(final String arg, final Locale locale) throws IllegalOptionValueException {
 		if (isValueNeeded()) {
 			if (arg == null) {
 				throw new IllegalOptionValueException(this, "");
@@ -103,11 +103,11 @@ public abstract class AbstractOption<E> {
 	 * @return The parsed option value.
 	 * @throws IllegalOptionValueException
 	 */
-	public abstract E parseValue(String arg, Locale locale) throws IllegalOptionValueException;
+	public abstract E parseValue(final String arg, final Locale locale) throws IllegalOptionValueException;
 
 	@Override
 	public String toString() {
-		StringBuilder option = new StringBuilder();
+		final StringBuilder option = new StringBuilder();
 		if (getShortForm() != null) {
 			option.append(" -").append(getShortForm()).append(",");
 		}

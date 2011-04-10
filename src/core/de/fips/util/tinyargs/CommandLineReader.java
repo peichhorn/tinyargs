@@ -31,9 +31,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import de.fips.util.tinyargs.annotation.CommandLineApplication;
-import de.fips.util.tinyargs.annotation.CommandLineOption;
-import de.fips.util.tinyargs.annotation.CommandLineValidator;
+import de.fips.util.tinyargs.annotation.ApplicationName;
+import de.fips.util.tinyargs.annotation.Option;
+import de.fips.util.tinyargs.annotation.OneOf;
+import de.fips.util.tinyargs.annotation.InInterval;
+import de.fips.util.tinyargs.annotation.EnableHelp;
 import de.fips.util.tinyargs.exception.IllegalOptionValueException;
 import de.fips.util.tinyargs.exception.UnknownOptionException;
 import de.fips.util.tinyargs.option.AbstractOption;
@@ -49,25 +51,26 @@ import de.fips.util.tinyargs.validator.ValueSetValidator;
  * <pre>
  * Example:
  * 
- * &#64;CommandLineApplication(appName = "Application", enableHelp = true, showUsageOnExeption = true)
+ * &#64;EnableHelp(showOnExeption = true)
+ * &#64;ApplicationName("Application")
  * public class Application {
  * 
  *   // -s,--show: show GUI
- *   &#64;CommandLineOption(longForm="show", shortForm="s", description="show GUI")
+ *   &#64;Option(longForm="show", shortForm="s", description="show GUI")
  *   private boolean show; // default: false
  * 
  *   // --text; allowed values [Lorem ipsum, foo]
- *   &#64;CommandLineOption()
- *   &#64;CommandLineValidator({ "Lorem ipsum", "foo" })
+ *   &#64;Option()
+ *   &#64;OneOf({ "Lorem ipsum", "foo" })
  *   private String text; // default: "Lorem ipsum"
  * 
  *   // --count
- *   &#64;CommandLineOption()
+ *   &#64;Option()
  *   private Integer count; // default: null
  * 
  *   // --f; interval [-10.3, 2.6]
- *   &#64;CommandLineOption()
- *   &#64;CommandLineValidator(min = "-10.3f", max = "2.6f")
+ *   &#64;Option()
+ *   &#64;InInterval(min = "-10.3f", max = "2.6f")
  *   private float f = 1.23f; // default: 1.23f
  * 	
  *   private Application() {
@@ -85,8 +88,8 @@ import de.fips.util.tinyargs.validator.ValueSetValidator;
  *   }
  *  
  *   public static void main(String[] args) {
- *     CommandLineApplicationParser&lt;Application&gt; clap = CommandLineApplicationParser.of(Application.class);
- *     Application app = clap.parse(args);
+ *     CommandLineReader&lt;Application&gt; clr = CommandLineReader.of(Application.class);
+ *     Application app = clr.read(args);
  *     app.start();
  *   }
  * }
@@ -97,7 +100,7 @@ import de.fips.util.tinyargs.validator.ValueSetValidator;
  * 
  * @author Philipp Eichhorn
  */
-public class CommandLineApplicationParser<E> {
+public class CommandLineReader<E> {
 	private final E annotatedObject;
 	private final Locale locale;
 	private AbstractOption<Void> helpOption;
@@ -106,13 +109,13 @@ public class CommandLineApplicationParser<E> {
 	private Set<Field> annotatedFields;
 	private Map<Field, AbstractOption<Object>> fieldOptionMap;
 
-	private CommandLineApplicationParser(E annotatedObject, Locale locale) throws IllegalArgumentException {
+	private CommandLineReader(E annotatedObject, Locale locale) throws IllegalArgumentException {
 		this.annotatedObject = annotatedObject;
 		this.locale = locale;
 		setup();
 	}
 
-	private CommandLineApplicationParser(Class<E> annotatedObjectType, Locale locale) throws IllegalArgumentException {
+	private CommandLineReader(Class<E> annotatedObjectType, Locale locale) throws IllegalArgumentException {
 		try {
 			final Constructor<E> constructor = annotatedObjectType.getDeclaredConstructor();
 			constructor.setAccessible(true);
@@ -124,7 +127,7 @@ public class CommandLineApplicationParser<E> {
 		setup();
 	}
 
-	public E parse(String[] args) throws IllegalOptionValueException, UnknownOptionException {
+	public E read(String[] args) throws IllegalOptionValueException, UnknownOptionException {
 		try {
 			parser.parse(args, locale);
 		} catch (final IllegalOptionValueException e1) {
@@ -171,48 +174,45 @@ public class CommandLineApplicationParser<E> {
 
 	private void setup() throws IllegalArgumentException {
 		final Class<?> annotatedObjectType = annotatedObject.getClass();
-		final CommandLineApplication commandLineApplication = annotatedObjectType.getAnnotation(CommandLineApplication.class);
-		if (commandLineApplication == null) {
-			throw Util.illegalArgument("The class '%s' was not annotated with CommandLineApplication", annotatedObjectType);
-		}
 		setupAnnotatedFields();
 		parser = new CommandLineParser();
 		fieldOptionMap = new HashMap<Field, AbstractOption<Object>>();
-		CommandLineOption commandLineOption;
-		CommandLineValidator commandLineValidator;
 		for (final Field field : annotatedFields) {
-			commandLineOption = field.getAnnotation(CommandLineOption.class);
-			final AbstractOption<Object> option = parser.addOption(optionForField(field, commandLineOption));
-			commandLineValidator = field.getAnnotation(CommandLineValidator.class);
-			if (commandLineValidator != null) {
-				tryToAddIntervalValidator(annotatedObjectType, commandLineValidator, option);
-				tryToAddValueSetValidator(annotatedObjectType, commandLineValidator, option);
+			Option option = field.getAnnotation(Option.class);
+			final AbstractOption<Object> optionForField = parser.addOption(optionForField(field, option));
+			OneOf oneOf = field.getAnnotation(OneOf.class);
+			InInterval inInterval = field.getAnnotation(InInterval.class);
+			if (oneOf != null) {
+				tryToAddValueSetValidator(annotatedObjectType, oneOf, optionForField);
 			}
-			fieldOptionMap.put(field, option);
+			if (inInterval != null) {
+				tryToAddIntervalValidator(annotatedObjectType, inInterval, optionForField);
+			}
+			fieldOptionMap.put(field, optionForField);
 		}
-
-		// evaluate CommandLineApplication parameter
-		if (commandLineApplication.enableHelp()) {
+		final EnableHelp enableHelp = annotatedObjectType.getAnnotation(EnableHelp.class);
+		if (enableHelp != null) {
 			helpOption = parser.addHelpOption();
+			showUsageOnExeption = enableHelp.showOnExeption();
 		}
-		showUsageOnExeption = commandLineApplication.showUsageOnExeption();
-		if (commandLineApplication.appNameFromJar()) {
-			parser.setApplicationNameFormJar();
-		}
-		if (!Util.isEmpty(commandLineApplication.appName())) {
-			parser.setApplicationName(commandLineApplication.appName());
+		final ApplicationName applicationName = annotatedObjectType.getAnnotation(ApplicationName.class);
+		if (applicationName != null) {
+			parser.setApplicationName(applicationName.value());
+			if (applicationName.fromJar()) {
+				parser.setApplicationNameFormJar();
+			}
 		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void tryToAddIntervalValidator(Class<?> annotatedObjectType, CommandLineValidator commandLineValidator, AbstractOption<Object> option) throws IllegalArgumentException {
-		tryToAddIntervalValidatorSafe(annotatedObjectType, commandLineValidator, (AbstractOption) option);
+	private void tryToAddIntervalValidator(Class<?> annotatedObjectType, InInterval inInterval, AbstractOption<Object> option) throws IllegalArgumentException {
+		tryToAddIntervalValidatorSafe(annotatedObjectType, inInterval, (AbstractOption) option);
 	}
 
-	private <T extends Comparable<T>> void tryToAddIntervalValidatorSafe(Class<?> annotatedObjectType, CommandLineValidator commandLineValidator, AbstractOption<T> option) throws IllegalArgumentException {
+	private <T extends Comparable<T>> void tryToAddIntervalValidatorSafe(Class<?> annotatedObjectType, InInterval inInterval, AbstractOption<T> option) throws IllegalArgumentException {
 		try {
-			final String min = commandLineValidator.min();
-			final String max = commandLineValidator.max();
+			final String min = inInterval.min();
+			final String max = inInterval.max();
 			if (!Util.isEmpty(min) || !Util.isEmpty(max)) {
 				final T minValue = Util.isEmpty(min) ? null : option.parseValue(min, locale);
 				final T maxValue = Util.isEmpty(max) ? null : option.parseValue(max, locale);
@@ -223,9 +223,9 @@ public class CommandLineApplicationParser<E> {
 		}
 	}
 
-	private void tryToAddValueSetValidator(Class<?> annotatedObjectType, CommandLineValidator commandLineValidator, AbstractOption<Object> option) throws IllegalArgumentException {
+	private void tryToAddValueSetValidator(Class<?> annotatedObjectType, OneOf oneOf, AbstractOption<Object> option) throws IllegalArgumentException {
 		try {
-			final String[] values = commandLineValidator.value();
+			final String[] values = oneOf.value();
 			if (!Util.isEmpty(values)) {
 				final Set<Object> validValues = new HashSet<Object>();
 				for (final String value : values) {
@@ -241,10 +241,10 @@ public class CommandLineApplicationParser<E> {
 	private void setupAnnotatedFields() throws IllegalArgumentException {
 		annotatedFields = new HashSet<Field>();
 		final Class<?> annotatedObjectType = annotatedObject.getClass();
-		CommandLineOption commandLineOption;
+		Option commandLineOption;
 		for (final Field field : annotatedObjectType.getDeclaredFields()) {
 			field.setAccessible(true);
-			commandLineOption = field.getAnnotation(CommandLineOption.class);
+			commandLineOption = field.getAnnotation(Option.class);
 			if (commandLineOption != null) {
 				annotatedFields.add(field);
 			}
@@ -254,7 +254,7 @@ public class CommandLineApplicationParser<E> {
 		}
 	}
 
-	private AbstractOption<Object> optionForField(Field field, CommandLineOption annotation) throws IllegalArgumentException {
+	private AbstractOption<Object> optionForField(Field field, Option annotation) throws IllegalArgumentException {
 		String longForm = annotation.longForm();
 		if (Util.isEmpty(longForm)) {
 			longForm = field.getName();
@@ -292,19 +292,19 @@ public class CommandLineApplicationParser<E> {
 		return e;
 	}
 
-	public static <T> CommandLineApplicationParser<T> of(T annotatedObject) throws IllegalArgumentException {
+	public static <T> CommandLineReader<T> of(T annotatedObject) throws IllegalArgumentException {
 		return of(annotatedObject, Locale.getDefault());
 	}
 
-	public static <T> CommandLineApplicationParser<T> of(T annotatedObject, Locale locale) throws IllegalArgumentException {
-		return new CommandLineApplicationParser<T>(annotatedObject, locale);
+	public static <T> CommandLineReader<T> of(T annotatedObject, Locale locale) throws IllegalArgumentException {
+		return new CommandLineReader<T>(annotatedObject, locale);
 	}
 
-	public static <T> CommandLineApplicationParser<T> of(Class<T> annotatedObjectType) throws IllegalArgumentException {
+	public static <T> CommandLineReader<T> of(Class<T> annotatedObjectType) throws IllegalArgumentException {
 		return of(annotatedObjectType, Locale.getDefault());
 	}
 
-	public static <T> CommandLineApplicationParser<T> of(Class<T> annotatedObjectType, Locale locale) throws IllegalArgumentException {
-		return new CommandLineApplicationParser<T>(annotatedObjectType, locale);
+	public static <T> CommandLineReader<T> of(Class<T> annotatedObjectType, Locale locale) throws IllegalArgumentException {
+		return new CommandLineReader<T>(annotatedObjectType, locale);
 	}
 }

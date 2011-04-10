@@ -55,7 +55,7 @@ public class CommandLineParser {
 	private final List<AbstractOption<?>> options = new ArrayList<AbstractOption<?>>();
 	private final Map<String, List<Object>> values = new HashMap<String, List<Object>>();
 	@Setter
-	private String applicationName = "appname";
+	private String applicationName = System.getProperty("app.name", "appname");
 	@Getter @Setter
 	private PrintStream printStream = System.err;
 

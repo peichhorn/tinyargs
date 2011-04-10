@@ -30,7 +30,7 @@ package de.fips.util.tinyargs.exception;
 public abstract class OptionException extends Exception {
 	private static final long serialVersionUID = -8065329794315231351L;
 
-	public OptionException(String msg) {
+	public OptionException(final String msg) {
 		super(msg);
 	}
 }

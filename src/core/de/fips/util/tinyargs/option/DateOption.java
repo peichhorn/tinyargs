@@ -36,26 +36,26 @@ import de.fips.util.tinyargs.exception.IllegalOptionValueException;
 public class DateOption extends AbstractOption<Date> {
 	private DateFormat dateFormat;
 
-	public DateOption(String longForm, String description) {
+	public DateOption(final String longForm, final String description) {
 		this(longForm, description, null);
 	}
 
-	public DateOption(char shortForm, String longForm, String description) {
+	public DateOption(final char shortForm, final String longForm, final String description) {
 		this(shortForm, longForm, description, null);
 	}
 
-	public DateOption(String longForm, String description, DateFormat dateFormat) {
+	public DateOption(final String longForm, final String description, final DateFormat dateFormat) {
 		super(longForm, description, false);
 		this.dateFormat = dateFormat;
 	}
 
-	public DateOption(char shortForm, String longForm, String description, DateFormat dateFormat) {
+	public DateOption(final char shortForm, final String longForm, final String description, final DateFormat dateFormat) {
 		super(shortForm, longForm, description, false);
 		this.dateFormat = dateFormat;
 	}
 
 	@Override
-	public Date parseValue(String arg, Locale locale) throws IllegalOptionValueException {
+	public Date parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
 		try {
 			if (dateFormat == null) {
 				dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);

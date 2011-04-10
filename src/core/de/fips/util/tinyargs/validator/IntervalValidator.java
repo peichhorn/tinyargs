@@ -42,7 +42,7 @@ public class IntervalValidator<E extends Comparable<E>> implements IValidator<E>
 	 * @param max
 	 *            maximum of the interval
 	 */
-	public IntervalValidator(E min, E max) {
+	public IntervalValidator(final E min, final E max) {
 		super();
 		if ((min != null) && (max != null) && (min.compareTo(max) > 0)) {
 			throw new IllegalArgumentException("'min' is supposed to be smaller than 'max'");
@@ -52,18 +52,18 @@ public class IntervalValidator<E extends Comparable<E>> implements IValidator<E>
 	}
 
 	@Override
-	public boolean validate(E value) {
+	public boolean validate(final E value) {
 		if (value == null) {
 			return false;
 		}
 		return notSmallerThan(value, getMin()) && notLargerThan(value, getMax());
 	}
 
-	private boolean notSmallerThan(E value, E min) {
+	private boolean notSmallerThan(final E value, final E min) {
 		return (min == null) || (value.compareTo(min) >= 0);
 	}
 
-	private boolean notLargerThan(E value, E max) {
+	private boolean notLargerThan(final E value, final E max) {
 		return (max == null) || (value.compareTo(max) <= 0);
 	}
 

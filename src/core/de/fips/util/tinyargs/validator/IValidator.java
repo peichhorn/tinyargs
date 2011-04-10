@@ -37,5 +37,5 @@ public interface IValidator<E> {
 	 * @return <code>true</code> if the <code>value</code> was valid, else
 	 *         <code>false</code>.
 	 */
-	public abstract boolean validate(E value);
+	public boolean validate(E value);
 }

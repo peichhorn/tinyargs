@@ -19,34 +19,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-package de.fips.util.tinyargs.option;
+package de.fips.util.tinyargs.annotation;
 
-import java.util.Locale;
-
-import de.fips.util.tinyargs.exception.IllegalOptionValueException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * An option that expects an long integer value.
+ * @see de.fips.util.tinyargs.CommandLineReader CommandLineReader
  * 
  * @author Philipp Eichhorn
- * @author All JArgs authors see JARGS_LICENSE
  */
-public class LongOption extends AbstractOption<Long> {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface InInterval {
+	String min() default "";
 
-	public LongOption(final String longForm, final String description) {
-		super(longForm, description, true);
-	}
-
-	public LongOption(final char shortForm, final String longForm, final String description) {
-		super(shortForm, longForm, description, true);
-	}
-
-	@Override
-	public Long parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
-		try {
-			return new Long(arg);
-		} catch (final NumberFormatException e) {
-			throw new IllegalOptionValueException(this, arg);
-		}
-	}
+	String max() default "";
 }

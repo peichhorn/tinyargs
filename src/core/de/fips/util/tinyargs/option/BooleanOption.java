@@ -34,16 +34,16 @@ import de.fips.util.tinyargs.exception.IllegalOptionValueException;
  */
 public class BooleanOption extends AbstractOption<Boolean> {
 
-	public BooleanOption(String longForm, String description) {
+	public BooleanOption(final String longForm, final String description) {
 		super(longForm, description, false);
 	}
 
-	public BooleanOption(char shortForm, String longForm, String description) {
+	public BooleanOption(final char shortForm, final String longForm, final String description) {
 		super(shortForm, longForm, description, false);
 	}
 
 	@Override
-	public Boolean parseValue(String arg, Locale locale) throws IllegalOptionValueException {
+	public Boolean parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
 		return Boolean.TRUE;
 	}
 }

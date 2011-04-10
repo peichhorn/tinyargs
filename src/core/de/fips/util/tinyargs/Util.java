@@ -23,6 +23,9 @@ package de.fips.util.tinyargs;
 
 import java.util.Collection;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import de.fips.util.tinyargs.option.AbstractOption;
 
 /**
@@ -30,12 +33,9 @@ import de.fips.util.tinyargs.option.AbstractOption;
  * 
  * @author Philipp Eichhorn
  */
+@NoArgsConstructor(access=AccessLevel.PRIVATE)
 final class Util {
 	private final static String OPTION_PACKAGE = AbstractOption.class.getPackage().getName();
-
-	private Util() {
-		// prevent instantiation
-	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T uncheckedCast(Object value) {

@@ -36,11 +36,11 @@ public class UnknownOptionException extends OptionException {
 
 	private final String optionName;
 
-	public UnknownOptionException(String optionName) {
-		this(optionName, "Unknown option '" + optionName + "'");
+	public UnknownOptionException(final String optionName) {
+		this(optionName, String.format("Unknown option '%s'", optionName));
 	}
 
-	public UnknownOptionException(String optionName, String msg) {
+	public UnknownOptionException(final String optionName, final String msg) {
 		super(msg);
 		this.optionName = optionName;
 	}

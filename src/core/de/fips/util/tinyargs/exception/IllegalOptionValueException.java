@@ -46,8 +46,8 @@ public class IllegalOptionValueException extends OptionException {
 	 * @param value
 	 *            The illegal value.
 	 */
-	public IllegalOptionValueException(AbstractOption<?> option, String value) {
-		super("Illegal value '" + value + "' for option " + (option.getShortForm() != null ? "-" + option.getShortForm() + "/" : "") + "--" + option.getLongForm());
+	public IllegalOptionValueException(final AbstractOption<?> option, final String value) {
+		super(String.format("Illegal value '%s' for option %s--%s", value, option.getShortForm() != null ? "-" + option.getShortForm() + "/" : "", option.getLongForm()));
 		this.option = option;
 		this.value = value;
 	}
