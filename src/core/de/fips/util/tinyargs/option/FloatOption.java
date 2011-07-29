@@ -25,8 +25,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import de.fips.util.tinyargs.exception.IllegalOptionValueException;
-
 /**
  * An option that expects a floating-point value.
  * 
@@ -43,13 +41,9 @@ public class FloatOption extends AbstractOption<Float> {
 	}
 
 	@Override
-	public Float parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
-		try {
-			final NumberFormat format = NumberFormat.getNumberInstance(locale);
-			final Number num = format.parse(arg);
-			return num.floatValue();
-		} catch (final ParseException e) {
-			throw new IllegalOptionValueException(this, arg);
-		}
+	public Float guardedParseValue(final String arg, final Locale locale) throws ParseException {
+		final NumberFormat format = NumberFormat.getNumberInstance(locale);
+		final Number num = format.parse(arg);
+		return num.floatValue();
 	}
 }

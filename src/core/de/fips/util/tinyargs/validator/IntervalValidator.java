@@ -69,6 +69,6 @@ public class IntervalValidator<E extends Comparable<E>> implements IValidator<E>
 
 	@Override
 	public String toString() {
-		return "interval " + ((getMin() == null) ? "]..." : "[" + getMin()) + ", " + ((getMax() == null) ? "...[" : getMax() + "]");
+		return String.format("interval %s, %s", getMin() == null ? "]..." : "[" + getMin(), getMax() == null ? "...[" : getMax() + "]");
 	}
 }

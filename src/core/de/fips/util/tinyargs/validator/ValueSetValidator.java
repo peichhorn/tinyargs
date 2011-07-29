@@ -47,6 +47,6 @@ public class ValueSetValidator<E> implements IValidator<E> {
 
 	@Override
 	public String toString() {
-		return "allowed values " + getValidValues();
+		return String.format("allowed values %s", getValidValues());
 	}
 }

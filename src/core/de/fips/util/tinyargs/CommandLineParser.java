@@ -280,7 +280,7 @@ public class CommandLineParser {
 		}
 
 		@Override
-		public Void parseValue(String arg, Locale locale) throws IllegalOptionValueException {
+		public Void guardedParseValue(String arg, Locale locale) {
 			printUsage();
 			return null;
 		}

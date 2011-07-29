@@ -25,8 +25,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import de.fips.util.tinyargs.exception.IllegalOptionValueException;
-
 /**
  * An option that expects a double-precision floating-point value.
  * 
@@ -44,13 +42,9 @@ public class DoubleOption extends AbstractOption<Double> {
 	}
 
 	@Override
-	public Double parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
-		try {
-			final NumberFormat format = NumberFormat.getNumberInstance(locale);
-			final Number num = format.parse(arg);
-			return num.doubleValue();
-		} catch (final ParseException e) {
-			throw new IllegalOptionValueException(this, arg);
-		}
+	public Double guardedParseValue(final String arg, final Locale locale) throws ParseException {
+		final NumberFormat format = NumberFormat.getNumberInstance(locale);
+		final Number num = format.parse(arg);
+		return num.doubleValue();
 	}
 }

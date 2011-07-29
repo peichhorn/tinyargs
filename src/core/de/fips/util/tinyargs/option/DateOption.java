@@ -26,8 +26,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-import de.fips.util.tinyargs.exception.IllegalOptionValueException;
-
 /**
  * An option that expects a date value.
  * 
@@ -55,14 +53,10 @@ public class DateOption extends AbstractOption<Date> {
 	}
 
 	@Override
-	public Date parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
-		try {
-			if (dateFormat == null) {
-				dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-			}
-			return dateFormat.parse(arg);
-		} catch (final ParseException e) {
-			throw new IllegalOptionValueException(this, arg);
+	public Date guardedParseValue(final String arg, final Locale locale) throws ParseException {
+		if (dateFormat == null) {
+			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
 		}
+		return dateFormat.parse(arg);
 	}
 }

@@ -23,8 +23,6 @@ package de.fips.util.tinyargs.option;
 
 import java.util.Locale;
 
-import de.fips.util.tinyargs.exception.IllegalOptionValueException;
-
 /**
  * An option that expects an integer value.
  * 
@@ -42,11 +40,7 @@ public class IntegerOption extends AbstractOption<Integer> {
 	}
 
 	@Override
-	public Integer parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
-		try {
-			return new Integer(arg);
-		} catch (final NumberFormatException e) {
-			throw new IllegalOptionValueException(this, arg);
-		}
+	public Integer guardedParseValue(final String arg, final Locale locale) {
+		return new Integer(arg);
 	}
 }

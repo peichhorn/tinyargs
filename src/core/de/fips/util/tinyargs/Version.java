@@ -21,17 +21,18 @@ THE SOFTWARE.
  */
 package de.fips.util.tinyargs;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * This class holds current version.
  * 
  * @author Philipp Eichhorn
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Version {
-	private static final String VERSION = "1.2.0-HEAD";
-	
-	private Version() {
-	}
-	
+	private static final String VERSION = "1.3.0-HEAD";
+
 	/** Prints the version followed by a newline, and exits. */
 	public static void main(String[] args) {
 		if (args.length > 0) {

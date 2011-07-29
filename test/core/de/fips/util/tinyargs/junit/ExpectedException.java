@@ -1,5 +1,5 @@
 /*
-Copyright © 2009-2011 Philipp Eichhorn.
+Copyright © 2011 Philipp Eichhorn.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -18,29 +18,34 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
- */
-package de.fips.util.tinyargs.option;
+*/
+package de.fips.util.tinyargs.junit;
 
-import java.util.Locale;
+import lombok.Delegate;
+import lombok.NoArgsConstructor;
 
-/**
- * An option that expects a boolean value.
- * 
- * @author Philipp Eichhorn
- * @author All JArgs authors see JARGS_LICENSE
- */
-public class BooleanOption extends AbstractOption<Boolean> {
+import org.junit.rules.MethodRule;
 
-	public BooleanOption(final String longForm, final String description) {
-		super(longForm, description, false);
+import de.fips.util.tinyargs.exception.IllegalOptionValueException;
+import de.fips.util.tinyargs.exception.UnknownOptionException;
+
+@NoArgsConstructor(staticName="none")
+public class ExpectedException implements MethodRule {
+	@Delegate
+	private final org.junit.rules.ExpectedException delegate = org.junit.rules.ExpectedException.none();
+
+	public void expectIllegalArgumentException(String message) {
+		expect(IllegalArgumentException.class);
+		expectMessage(message);
 	}
 
-	public BooleanOption(final char shortForm, final String longForm, final String description) {
-		super(shortForm, longForm, description, false);
+	public void expectIllegalOptionValueException(String message) {
+		expect(IllegalOptionValueException.class);
+		expectMessage(message);
 	}
-
-	@Override
-	public Boolean guardedParseValue(final String arg, final Locale locale) {
-		return Boolean.TRUE;
+	
+	public void expectUnknownOptionException(String message) {
+		expect(UnknownOptionException.class);
+		expectMessage(message);
 	}
 }

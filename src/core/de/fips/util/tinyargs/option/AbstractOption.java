@@ -83,13 +83,21 @@ public abstract class AbstractOption<E> {
 				throw new IllegalOptionValueException(this, "");
 			}
 		}
-		final E value = this.parseValue(arg, locale);
+		final E value = parseValue(arg, locale);
 		for (final IValidator<E> validator : getValidators()) {
 			if (!validator.validate(value)) {
 				throw new IllegalOptionValueException(this, arg);
 			}
 		}
 		return value;
+	}
+
+	public final E parseValue(final String arg, final Locale locale) throws IllegalOptionValueException {
+		try {
+			return guardedParseValue(arg, locale);
+		} catch (final Exception e) {
+			throw new IllegalOptionValueException(this, arg);
+		}		
 	}
 
 	/**
@@ -101,9 +109,9 @@ public abstract class AbstractOption<E> {
 	 * @param locale
 	 *            The specified Locale.
 	 * @return The parsed option value.
-	 * @throws IllegalOptionValueException
+	 * @throws Exception
 	 */
-	public abstract E parseValue(final String arg, final Locale locale) throws IllegalOptionValueException;
+	public abstract E guardedParseValue(final String arg, final Locale locale) throws Exception;
 
 	@Override
 	public String toString() {
