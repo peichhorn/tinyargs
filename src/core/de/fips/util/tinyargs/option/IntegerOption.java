@@ -41,6 +41,6 @@ public class IntegerOption extends AbstractOption<Integer> {
 
 	@Override
 	public Integer guardedParseValue(final String arg, final Locale locale) {
-		return new Integer(arg);
+		return Integer.valueOf(arg);
 	}
 }

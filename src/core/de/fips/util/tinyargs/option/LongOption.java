@@ -41,6 +41,6 @@ public class LongOption extends AbstractOption<Long> {
 
 	@Override
 	public Long guardedParseValue(final String arg, final Locale locale) {
-		return new Long(arg);
+		return Long.valueOf(arg);
 	}
 }
