@@ -1,23 +1,23 @@
 /*
-Copyright © 2009-2011 Philipp Eichhorn.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+ * Copyright © 2009-2011 Philipp Eichhorn.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package de.fips.util.tinyargs;
 
@@ -109,13 +109,13 @@ public class CommandLineReader<E> {
 	private Set<Field> annotatedFields;
 	private Map<Field, AbstractOption<Object>> fieldOptionMap;
 
-	private CommandLineReader(E annotatedObject, Locale locale) throws IllegalArgumentException {
+	private CommandLineReader(final E annotatedObject, final Locale locale) throws IllegalArgumentException {
 		this.annotatedObject = annotatedObject;
 		this.locale = locale;
 		setup();
 	}
 
-	private CommandLineReader(Class<E> annotatedObjectType, Locale locale) throws IllegalArgumentException {
+	private CommandLineReader(final Class<E> annotatedObjectType, final Locale locale) throws IllegalArgumentException {
 		try {
 			final Constructor<E> constructor = annotatedObjectType.getDeclaredConstructor();
 			constructor.setAccessible(true);
@@ -127,7 +127,7 @@ public class CommandLineReader<E> {
 		setup();
 	}
 
-	public E read(String[] args) throws IllegalOptionValueException, UnknownOptionException {
+	public E read(final String[] args) throws IllegalOptionValueException, UnknownOptionException {
 		try {
 			parser.parse(args, locale);
 		} catch (final IllegalOptionValueException e1) {
@@ -160,7 +160,7 @@ public class CommandLineReader<E> {
 	 * Sets the {@link PrintStream} used for
 	 * {@link CommandLineParser#printUsage()}.
 	 */
-	public void setPrintStream(PrintStream out) {
+	public void setPrintStream(final PrintStream out) {
 		parser.setPrintStream(out);
 	}
 
@@ -205,11 +205,11 @@ public class CommandLineReader<E> {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void tryToAddIntervalValidator(Class<?> annotatedObjectType, InInterval inInterval, AbstractOption<Object> option) throws IllegalArgumentException {
+	private void tryToAddIntervalValidator(final Class<?> annotatedObjectType, final InInterval inInterval, final AbstractOption<Object> option) throws IllegalArgumentException {
 		tryToAddIntervalValidatorSafe(annotatedObjectType, inInterval, (AbstractOption) option);
 	}
 
-	private <T extends Comparable<T>> void tryToAddIntervalValidatorSafe(Class<?> annotatedObjectType, InInterval inInterval, AbstractOption<T> option) throws IllegalArgumentException {
+	private <T extends Comparable<T>> void tryToAddIntervalValidatorSafe(final Class<?> annotatedObjectType, final InInterval inInterval, final AbstractOption<T> option) throws IllegalArgumentException {
 		try {
 			final String min = inInterval.min();
 			final String max = inInterval.max();
@@ -223,7 +223,7 @@ public class CommandLineReader<E> {
 		}
 	}
 
-	private void tryToAddValueSetValidator(Class<?> annotatedObjectType, OneOf oneOf, AbstractOption<Object> option) throws IllegalArgumentException {
+	private void tryToAddValueSetValidator(final Class<?> annotatedObjectType, final OneOf oneOf, final AbstractOption<Object> option) throws IllegalArgumentException {
 		try {
 			final String[] values = oneOf.value();
 			if (!Util.isEmpty(values)) {
@@ -254,7 +254,7 @@ public class CommandLineReader<E> {
 		}
 	}
 
-	private AbstractOption<Object> optionForField(Field field, Option annotation) throws IllegalArgumentException {
+	private AbstractOption<Object> optionForField(final Field field, final Option annotation) throws IllegalArgumentException {
 		String longForm = annotation.longForm();
 		if (Util.isEmpty(longForm)) {
 			longForm = field.getName();
@@ -262,7 +262,7 @@ public class CommandLineReader<E> {
 		return optionForField(field.getType(), annotation.shortForm(), longForm, annotation.description());
 	}
 
-	private AbstractOption<Object> optionForField(Class<?> fieldType, String shortForm, String longForm, String description) throws IllegalArgumentException {
+	private AbstractOption<Object> optionForField(final Class<?> fieldType, final String shortForm, final String longForm, final String description) throws IllegalArgumentException {
 		final String optionTypeName = Util.getOptionTypeName(fieldType);
 		Class<? extends AbstractOption<Object>> optionClass = null;
 		try {
@@ -282,8 +282,8 @@ public class CommandLineReader<E> {
 			throw Util.illegalArgument("Could not find constructor '%s(char, String, String)' or '%s(String, String)'.", optionTypeName, optionTypeName);
 		}
 	}
-	
-	private <T extends Throwable> T exception(T e) {
+
+	private <T extends Throwable> T exception(final T e) {
 		if (showUsageOnExeption) {
 			parser.getPrintStream().println(e.getMessage());
 			parser.getPrintStream().println("");
@@ -292,19 +292,19 @@ public class CommandLineReader<E> {
 		return e;
 	}
 
-	public static <T> CommandLineReader<T> of(T annotatedObject) throws IllegalArgumentException {
+	public static <T> CommandLineReader<T> of(final T annotatedObject) throws IllegalArgumentException {
 		return of(annotatedObject, Locale.getDefault());
 	}
 
-	public static <T> CommandLineReader<T> of(T annotatedObject, Locale locale) throws IllegalArgumentException {
+	public static <T> CommandLineReader<T> of(final T annotatedObject, final Locale locale) throws IllegalArgumentException {
 		return new CommandLineReader<T>(annotatedObject, locale);
 	}
 
-	public static <T> CommandLineReader<T> of(Class<T> annotatedObjectType) throws IllegalArgumentException {
+	public static <T> CommandLineReader<T> of(final Class<T> annotatedObjectType) throws IllegalArgumentException {
 		return of(annotatedObjectType, Locale.getDefault());
 	}
 
-	public static <T> CommandLineReader<T> of(Class<T> annotatedObjectType, Locale locale) throws IllegalArgumentException {
+	public static <T> CommandLineReader<T> of(final Class<T> annotatedObjectType, final Locale locale) throws IllegalArgumentException {
 		return new CommandLineReader<T>(annotatedObjectType, locale);
 	}
 }

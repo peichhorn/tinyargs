@@ -1,23 +1,23 @@
 /*
-Copyright © 2009-2011 Philipp Eichhorn.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+ * Copyright © 2009-2011 Philipp Eichhorn.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package de.fips.util.tinyargs;
 
@@ -68,7 +68,7 @@ public class CommandLineParser {
 	 *            Type of options value.
 	 * @return The specified Option itself.
 	 */
-	public <E> AbstractOption<E> addOption(AbstractOption<E> option) {
+	public <E> AbstractOption<E> addOption(final AbstractOption<E> option) {
 		if (option.getShortForm() != null) {
 			parameterOptionsMap.put("-" + option.getShortForm(), option);
 		}
@@ -112,7 +112,7 @@ public class CommandLineParser {
 	 * Equivalent to {@link #getOptionValue(AbstractOption, Object)
 	 * getOptionValue(option, null)}.
 	 */
-	public <E> E getOptionValue(AbstractOption<E> option) {
+	public <E> E getOptionValue(final AbstractOption<E> option) {
 		return getOptionValue(option, null);
 	}
 
@@ -126,7 +126,7 @@ public class CommandLineParser {
 	 * @return The parsed value of the specified Option, or a default value if
 	 *         the option was not set.
 	 */
-	public <E> E getOptionValue(AbstractOption<E> option, E def) {
+	public <E> E getOptionValue(final AbstractOption<E> option, final E def) {
 		final List<Object> v = values.get(option.getLongForm());
 		if (Util.isEmpty(v)) {
 			return def;
@@ -143,7 +143,7 @@ public class CommandLineParser {
 	 * @return A List giving the parsed values of all the occurrences of the
 	 *         given Option, or an empty List if the option was not set.
 	 */
-	public <E> List<E> getOptionValues(AbstractOption<E> option) {
+	public <E> List<E> getOptionValues(final AbstractOption<E> option) {
 		final List<E> result = new ArrayList<E>();
 		final List<Object> optionValues = values.get(option.getLongForm());
 		if (optionValues != null) {
@@ -163,7 +163,7 @@ public class CommandLineParser {
 	 * @return Status flag which indicates whether there are values for a given
 	 *         options or not.
 	 */
-	public <E> boolean hasValues(AbstractOption<E> option) {
+	public <E> boolean hasValues(final AbstractOption<E> option) {
 		return !Util.isEmpty(values.get(option.getLongForm()));
 	}
 
@@ -171,7 +171,7 @@ public class CommandLineParser {
 	 * Equivalent to {@link #parse(String[], Locale) parse(args,
 	 * Locale.getDefault())}.
 	 */
-	public void parse(String[] args) throws IllegalOptionValueException, UnknownOptionException {
+	public void parse(final String[] args) throws IllegalOptionValueException, UnknownOptionException {
 		parse(args, Locale.getDefault());
 	}
 
@@ -185,7 +185,7 @@ public class CommandLineParser {
 	 * @throws IllegalOptionValueException
 	 * @throws UnknownOptionException
 	 */
-	public void parse(String[] args, Locale locale) throws IllegalOptionValueException, UnknownOptionException {
+	public void parse(final String[] args, final Locale locale) throws IllegalOptionValueException, UnknownOptionException {
 		final List<String> otherArgs = new ArrayList<String>();
 		this.values.clear();
 		boolean allFine = true;
@@ -264,7 +264,7 @@ public class CommandLineParser {
 		}
 	}
 
-	private void addValue(AbstractOption<?> opt, Object value) {
+	private void addValue(final AbstractOption<?> opt, final Object value) {
 		final String lf = opt.getLongForm();
 		List<Object> v = values.get(lf);
 		if (v == null) {
@@ -280,7 +280,7 @@ public class CommandLineParser {
 		}
 
 		@Override
-		public Void guardedParseValue(String arg, Locale locale) {
+		public Void guardedParseValue(final String arg, final Locale locale) {
 			printUsage();
 			return null;
 		}
