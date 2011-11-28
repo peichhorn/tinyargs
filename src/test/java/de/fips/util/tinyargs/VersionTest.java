@@ -14,7 +14,7 @@ public class VersionTest {
 	@Test
 	public void whenInvoked_getVersion_returnsCurrentVersion() throws Exception {
 		// run + assert
-		assertThat(Version.getVersion()).contains("1.3.0-HEAD");
+		assertThat(Version.getVersion()).contains("1.3.0");
 	}
 
 	@Test
@@ -24,7 +24,7 @@ public class VersionTest {
 		// run
 		Version.main(args);
 		// assert
-		assertThat(stdOut.getContent()).contains("1.3.0-HEAD");
+		assertThat(stdOut.getContent()).contains("1.3.0");
 	}
 
 	@Test
@@ -34,6 +34,6 @@ public class VersionTest {
 		// run
 		Version.main(args);
 		// assert
-		assertThat(stdOut.getContent()).contains("tinyargs 1.3.0-HEAD");
+		assertThat(stdOut.getContent()).contains("tinyargs 1.3.0");
 	}
 }

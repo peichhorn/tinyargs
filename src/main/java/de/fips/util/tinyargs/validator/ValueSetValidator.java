@@ -39,10 +39,7 @@ public class ValueSetValidator<E> implements IValidator<E> {
 
 	@Override
 	public boolean validate(final E value) {
-		if (value == null) {
-			return false;
-		}
-		return getValidValues().contains(value);
+		return (value != null) && getValidValues().contains(value);
 	}
 
 	@Override

@@ -49,8 +49,8 @@ the common tasks and can be called on to run the main aspects of all the sub-scr
   <!-- IDE integration -->
   <target name="eclipse" depends="deps" description="Creates eclipse project files and downloads all dependencies. Open this directory as project in eclipse after running this target.">
     <ivy:eclipsegen source="1.6">
-      <srcdir dir="src/core" />
-      <srcdir dir="test/core" />
+      <srcdir dir="src/main/java" />
+      <srcdir dir="src/test/java" />
       <conf name="build" sources="contrib" />
       <conf name="test" sources="contrib" />
       <settings>
@@ -88,7 +88,7 @@ the common tasks and can be called on to run the main aspects of all the sub-scr
   
   <target name="compile" depends="ensureBuildDeps" description="Compiles the code.">
     <ivy:compile destdir="build/tinyargs" source="1.6" target="1.6" includeantruntime="false">
-      <src path="src/core" />
+      <src path="src/main/java" />
       <classpath location="build/tinyargs" />
       <classpath refid="build.path" />
     </ivy:compile>
