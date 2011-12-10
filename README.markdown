@@ -1,7 +1,8 @@
-Annotation-based command line interpreter based on the JArgs Project (http://jargs.sourceforge.net)
+Annotation-based command line interpreter based on the [JArgs Project](http://jargs.sourceforge.net).
 
 Example:
 
+```java
 @EnableHelp(showOnExeption = true)
 @ApplicationName(fromJar = true)
 public class ImageConverter{
@@ -35,6 +36,7 @@ public class Main {
     }
   }
 }
+```
 
 TODO:
 
